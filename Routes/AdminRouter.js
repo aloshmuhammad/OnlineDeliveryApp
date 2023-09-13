@@ -1,4 +1,6 @@
 import express from 'express'
+import { adminSignUp,adminLogin } from '../Controllers/AdminControllers.js'
+import { adminLoginvalidatiion } from '../Validations/Validation.js'
 
 
 
@@ -6,7 +8,8 @@ import express from 'express'
 var router=express.Router()
 
 
-router
+router.post('/admin-signup',adminLoginvalidatiion,adminSignUp)
+router.post('/admin-login',adminLoginvalidatiion,adminLogin)
 
 
 

@@ -27,3 +27,7 @@ export const loginValidation = [
   check('email', 'Please include a valid email').isEmail(),
   check('password','Please include the Password').not().isEmpty(),
 ];
+export const adminLoginvalidatiion=[
+  check('email', 'Please include a valid email').isEmail(),
+  check('password','Please include the Password').not().isEmpty(),
+]
