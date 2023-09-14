@@ -4,9 +4,15 @@ const SignupQuery = async (data) => {
     return new Promise(async (resolve, reject) => {
       try {
         const existingDriver=await Driver.findOne({email:data.email})
-        if(existingDriver)
-        await Driver.create(data);
-        resolve({ message: 'Driver signup successful' });
+        if(existingDriver){
+            reject({
+                message:'Driver Already Found'
+            })
+        }else{
+            await Driver.create(data);
+            resolve({ message: 'Driver signup successful' });
+        }
+       
       } catch (error) {
         reject(error);
       }

@@ -3,7 +3,7 @@ import { check } from 'express-validator';
 export const signupValidation = [
    
   check('name', 'Name is required').not().isEmpty(),
-  check('email', 'Please include a valid email').isEmail().normalizeEmail({ gmail_remove_dots: true }),
+  check('email', 'Please include a valid email').isEmail(),
   check('password')
     .custom((value, { req }) => {
       const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
@@ -30,4 +30,7 @@ export const loginValidation = [
 export const adminLoginvalidatiion=[
   check('email', 'Please include a valid email').isEmail(),
   check('password','Please include the Password').not().isEmpty(),
+]
+export const paramsValidation=[
+  check('id','ID parameter must not be empty').not().isEmpty()
 ]

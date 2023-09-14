@@ -14,7 +14,9 @@ const signUp=async(req,res,next)=>{
       req.body.password = await bcrypt.hash(req.body.password,10)
       SignupQuery(req.body).then((response)=>{
       res.status(201).json({response})
-      })
+      }).catch((err)=>{
+        res.status(401).json(err)
+    })
     } catch(error){
           
       res.status(500).json({ message: "An error occurred", error: error.message });
