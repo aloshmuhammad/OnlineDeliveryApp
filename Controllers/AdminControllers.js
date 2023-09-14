@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator"
-import { adminSignUpQuery,adminSigninQuery,vendorUpdate,adminCreateDriver,getDrivers,driverUpdate,driverDelete,vendorAdd,vendorList,vendorDelete } from "../Model/UseCases/AdminQuery.js"
+import { adminSignUpQuery,productDelete,productList,productUpdate,productAdd,categoryAdd,adminSigninQuery,vendorUpdate,adminCreateDriver,getDrivers,driverUpdate,driverDelete,vendorAdd,vendorList,vendorDelete } from "../Model/UseCases/AdminQuery.js"
 import bcrypt from 'bcrypt'
 const adminSignUp=async(req,res,next)=>{
 
@@ -163,7 +163,81 @@ const deleteVendor=async(req,res,next)=>{
    
     
 }
+const addCategory=async(req,res,next)=>{
+    const errors=validationResult(req)
+    console.log(errors,'erer')
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors:errors.array()})
+    }
+    try{
+        categoryAdd(req.body).then((response)=>{
+          res.status(201).json(response)
+        })
 
+    }catch(error){
+        res.status(500).json({message:'An error occured',error:error.message})
+      }
+   
+}
+const addProduct=async(req,res,next)=>{
+    const errors=validationResult(req)
+    console.log(errors,'erer')
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors:errors.array()})
+    }
+    try{
+        productAdd(req.body).then((response)=>{
+           res.status(201).json(response)
+        })
 
+    }catch(error){
+        res.status(500).json({message:'An error occured',error:error.message})
+      }
+}
+const getProduct=async(req,res,next)=>{
+    try{
+        productList().then((response)=>{
+          res.status(200).json(response)
+        }).catch((err)=>{
+            res.status(401).json(err)
+        })
+    }catch(error){
+        res.status(500).json({message:'An error occured',error:error.message})
+      }
+}
+const updateProduct=async(req,res,next)=>{
+    const errors=validationResult(req)
 
-export {adminSignUp,adminLogin,adminaddDriver,adminGetDriver,updateDriver,deleteDriver,addVendor,getVendors,updateVendor,deleteVendor}
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors:errors.array()})
+    }
+   try{
+    const {id}=req.params
+    const updatedData=req.body
+    productUpdate(id,updatedData).then((response)=>{
+          res.status(200).json(response)
+    })
+   }catch(error){
+    res.status(500).json({message:'An error occured',error:error.message})
+  }
+}
+
+const deleteProduct=async(req,res,next)=>{
+    const errors=validationResult(req)
+    console.log(errors,'erer')
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors:errors.array()})
+    }
+    try{
+        const {id}=req.params
+        productDelete(id).then((response)=>{
+            res.status(200).json(response)
+
+        })
+    }catch(error){
+        res.status(500).json({message:'An error occured',error:error.message})
+      }
+   
+}
+
+export {adminSignUp,deleteProduct,updateProduct,getProduct,addProduct,adminLogin,adminaddDriver,adminGetDriver,updateDriver,deleteDriver,addVendor,getVendors,updateVendor,deleteVendor,addCategory}

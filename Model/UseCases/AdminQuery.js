@@ -2,6 +2,9 @@ import Admin from "../Schemas/AdminSchema.js"
 import bcrypt from 'bcrypt'
 import Driver from "../Schemas/truckDriverSchema.js"
 import Vendor from "../Schemas/VendorSchema.js"
+import Category from "../Schemas/CategorySchem.js"
+import Products from "../Schemas/ProductSchema.js"
+
 const adminSignUpQuery=async(data)=>{
     return new Promise(async(resolve,reject)=>{
         try{
@@ -142,7 +145,7 @@ const adminCreateDriver=async(data)=>{
                 }
                 
              }catch(error){
-                 throw new Error('Error occured during Deleting the Driver in database')
+                 throw new Error('Error occured during fetching the vendors')
              }
         })
       
@@ -182,7 +185,84 @@ const adminCreateDriver=async(data)=>{
      
     }
 
+    const categoryAdd=async(data)=>{
+       return new Promise(async(resolve,reject)=>{
+        try{
+          await Category.create(data)
+          resolve({
+            message:'Category added Successfully'
+          })
+        }catch(error){
+                throw new Error('Error occured during Adding the Category')
+            }
+       })
+    }
+    const productAdd=async(data)=>{
+        return new Promise(async(resolve,reject)=>{
+            try{
+                await Products.create(data)
+                resolve({
+                    message:'Product added Successfully'
+                })
+
+            }catch(error){
+                throw new Error('Error occured during Adding the Products')
+            }
+        })
+    }
+    const productList=async()=>{
+        return new Promise (async(resolve,reject)=>{
+            try{
+                const productList=await Products.find()
+                if(productList.length>0){
+                    
+                    resolve(productList)
+                }else{
+                    reject({
+                        message:'No Products Found'
+                    })
+                }
+                
+             }catch(error){
+                 throw new Error('Error occured during geting the products from the database')
+             }
+        })
+    }
+    const productUpdate=async(id,updatedData)=>{
+        return new Promise(async(resolve,reject)=>{
+            try{
+              
+            const Data=await Products.findByIdAndUpdate(id,updatedData,{new:true})
+            
+            if(Data){
+             resolve(Data)
+            }else{
+             reject({
+                 message:'Document Not Found'
+             })
+            }
+         
+     }catch(error){
+         throw new Error('Error occured during Updating the Products in database')
+     }
+ })
+    }
+    const productDelete=async(id)=>{
+        return new Promise(async(resolve,reject)=>{
+            try{
+                await Products.findByIdAndDelete(id)
+                resolve({
+                 message:'Document Deleted Successfully'
+                 
+                })
+            }catch(error){
+                throw new Error('Error occured during Deleting the Product in database')
+            }
+
+        })
+    }
 
 
 
-export {adminSignUpQuery,adminSigninQuery,adminCreateDriver,getDrivers,driverUpdate,driverDelete,vendorAdd,vendorList,vendorUpdate,vendorDelete}
+
+export {adminSignUpQuery,productDelete,productUpdate,productList,productAdd,categoryAdd,adminSigninQuery,adminCreateDriver,getDrivers,driverUpdate,driverDelete,vendorAdd,vendorList,vendorUpdate,vendorDelete}

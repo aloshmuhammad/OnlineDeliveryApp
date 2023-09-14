@@ -1,4 +1,5 @@
 import Driver from "../Schemas/truckDriverSchema.js"
+import Vendor from "../Schemas/VendorSchema.js";
 import bcrypt from 'bcrypt'
 const SignupQuery = async (data) => {
     return new Promise(async (resolve, reject) => {
@@ -44,5 +45,42 @@ const signInQuery=async(data)=>{
     }
  })
 }
+const vendorList=async()=>{
+  return new Promise (async(resolve,reject)=>{
+      try{
+          const Vendors=await Vendor.find()
+          if(Vendors.length>0){
+              console.log(Vendors,'op')
+              resolve(Vendors)
+          }else{
+              reject({
+                  message:'No Vendors Found'
+              })
+          }
+          
+       }catch(error){
+           throw new Error('Error occured during Fetching the vendors from database')
+       }
+  })
 
-    export {SignupQuery,signInQuery}
+}
+const vendorSelect=async(id)=>{
+   return new Promise(async(resolve,reject)=>{
+    try{
+      const SelectedVendor=await Vendor.findById(id)
+      
+      if(SelectedVendor){
+        resolve(SelectedVendor)
+      }else{
+        reject({
+          message:'Vendor not Found'
+        })
+      }
+    }catch(error){
+      throw new Error('Error occured during Fetching the vendors from database')
+  }
+  
+   })
+}
+
+    export {SignupQuery,signInQuery,vendorList,vendorSelect}

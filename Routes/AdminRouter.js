@@ -1,6 +1,6 @@
 import express from 'express'
-import { adminSignUp,adminLogin,adminaddDriver,adminGetDriver,updateDriver,deleteDriver,addVendor,getVendors,updateVendor,deleteVendor} from '../Controllers/AdminControllers.js'
-import { adminLoginvalidatiion,signupValidation,paramsValidation,vendorValidation } from '../Validations/Validation.js'
+import { adminSignUp,deleteProduct,updateProduct,adminLogin,getProduct,addProduct,addCategory,adminaddDriver,adminGetDriver,updateDriver,deleteDriver,addVendor,getVendors,updateVendor,deleteVendor} from '../Controllers/AdminControllers.js'
+import { adminLoginvalidatiion,productValidation,signupValidation,paramsValidation,vendorValidation ,categoryValidation} from '../Validations/Validation.js'
 
 
 
@@ -20,6 +20,15 @@ router.post('/create-vendor',vendorValidation,addVendor)
 router.get('/get-vendors',getVendors)
 router.patch('/update-vendor/:id',paramsValidation,updateVendor)
 router.delete('/delete-vendor/:id',paramsValidation,deleteVendor)
+
+
+
+router.post('/add-category',categoryValidation,addCategory)
+
+router.post('/add-product',productValidation,addProduct)
+router.get('/get-products',getProduct)
+router.patch('/update-product/:id',paramsValidation,updateProduct)
+router.delete('/delete-product/:id',paramsValidation,deleteProduct)
 
 
 
