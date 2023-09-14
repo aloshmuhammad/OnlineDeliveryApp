@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator"
-import { adminSignUpQuery,adminSigninQuery,adminCreateDriver,getDrivers,driverUpdate,driverDelete } from "../Model/UseCases/AdminQuery.js"
+import { adminSignUpQuery,adminSigninQuery,vendorUpdate,adminCreateDriver,getDrivers,driverUpdate,driverDelete,vendorAdd,vendorList,vendorDelete } from "../Model/UseCases/AdminQuery.js"
 import bcrypt from 'bcrypt'
 const adminSignUp=async(req,res,next)=>{
 
@@ -96,4 +96,74 @@ const deleteDriver=async(req,res,next)=>{
    
     
 }
-export {adminSignUp,adminLogin,adminaddDriver,adminGetDriver,updateDriver,deleteDriver}
+
+
+const addVendor=async(req,res,next)=>{
+    const errors=validationResult(req)
+    console.log(errors,'erer')
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors:errors.array()})
+    }
+    try{
+        vendorAdd(req.body).then((response)=>{
+          res.status(201).json(response)
+        })
+    }catch(error){
+        res.status(500).json({message:'An error occured',error:error.message})
+      }
+   
+}
+const getVendors=async(req,res,next)=>{
+    try{
+        vendorList().then((response)=>{
+          res.status(200).json(response)
+        }).catch((err)=>{
+            res.status(401).json(err)
+        })
+    }catch(error){
+        res.status(500).json({message:'An error occured',error:error.message})
+      }
+      
+  
+}
+const updateVendor=async(req,res,next)=>{
+    const errors=validationResult(req)
+    console.log(errors,'erer')
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors:errors.array()})
+    }
+   try{
+    const {id}=req.params
+    const updatedData=req.body
+    vendorUpdate(id,updatedData).then((response)=>{
+          res.status(200).json(response)
+    })
+   }catch(error){
+    res.status(500).json({message:'An error occured',error:error.message})
+  }
+   
+
+ 
+}
+const deleteVendor=async(req,res,next)=>{
+    const errors=validationResult(req)
+    console.log(errors,'erer')
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors:errors.array()})
+    }
+    try{
+        const {id}=req.params
+        vendorDelete(id).then((response)=>{
+            res.status(200).json(response)
+
+        })
+    }catch(error){
+        res.status(500).json({message:'An error occured',error:error.message})
+      }
+   
+    
+}
+
+
+
+export {adminSignUp,adminLogin,adminaddDriver,adminGetDriver,updateDriver,deleteDriver,addVendor,getVendors,updateVendor,deleteVendor}

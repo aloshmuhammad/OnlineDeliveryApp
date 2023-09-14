@@ -1,6 +1,7 @@
 import Admin from "../Schemas/AdminSchema.js"
 import bcrypt from 'bcrypt'
 import Driver from "../Schemas/truckDriverSchema.js"
+import Vendor from "../Schemas/VendorSchema.js"
 const adminSignUpQuery=async(data)=>{
     return new Promise(async(resolve,reject)=>{
         try{
@@ -113,5 +114,75 @@ const adminCreateDriver=async(data)=>{
      
     }
 
+    const vendorAdd=async(data)=>{
+     return new Promise(async(resolve,reject)=>{
+        try{
+            await Vendor.create(data)
+            resolve({
+                message:'Vendor Added Successfully'
+            })
+        
+        }catch(error){
+            throw new Error('Error occured during Adding the Vendor')
+        }
+    })
+    
+    }
+    const vendorList=async()=>{
+        return new Promise (async(resolve,reject)=>{
+            try{
+                const Vendors=await Vendor.find()
+                if(Vendors.length>0){
+                    console.log(Vendors,'op')
+                    resolve(Vendors)
+                }else{
+                    reject({
+                        message:'No Vendors Found'
+                    })
+                }
+                
+             }catch(error){
+                 throw new Error('Error occured during Deleting the Driver in database')
+             }
+        })
+      
+    }
+    const vendorUpdate=async(id,updatedData)=>{
+        return new Promise(async(resolve,reject)=>{
+           try{
 
-export {adminSignUpQuery,adminSigninQuery,adminCreateDriver,getDrivers,driverUpdate,driverDelete}
+           const Data=await Vendor.findByIdAndUpdate(id,updatedData,{new:true})
+           if(Data){
+            resolve(Data)
+           }else{
+            reject({
+                message:'Document Not Found'
+            })
+           }
+        
+    }catch(error){
+        throw new Error('Error occured during Updating the Vendor in database')
+    }
+})
+    }
+
+    const vendorDelete=async(id)=>{
+        return new Promise(async(resolve,reject)=>{
+            try{
+                await Driver.findByIdAndDelete(id)
+                resolve({
+                 message:'Document Deleted Successfully'
+                 
+                })
+            }catch(error){
+                throw new Error('Error occured during Deleting the Vendor in database')
+            }
+
+        })
+     
+    }
+
+
+
+
+export {adminSignUpQuery,adminSigninQuery,adminCreateDriver,getDrivers,driverUpdate,driverDelete,vendorAdd,vendorList,vendorUpdate,vendorDelete}

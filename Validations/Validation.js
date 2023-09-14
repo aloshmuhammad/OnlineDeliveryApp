@@ -34,3 +34,14 @@ export const adminLoginvalidatiion=[
 export const paramsValidation=[
   check('id','ID parameter must not be empty').not().isEmpty()
 ]
+
+export const vendorValidation= [
+   
+  check('name', 'Name is required').not().isEmpty(),
+  check('email', 'Please include a valid email').isEmail(),
+  check('location', 'Address is required').not().isEmpty(),
+  check('mobileNo')
+    
+    .isLength({ min: 10 })
+    .withMessage('Phone Number Must contain 10 digits')
+];
