@@ -44,7 +44,7 @@ export const vendorValidation= [
     
     .isLength({ min: 10 })
     .withMessage('Phone Number Must contain 10 digits')
-];
+]
 
 export const categoryValidation=[
   check('categoryname','Category Name is Required').not().isEmpty()
@@ -55,4 +55,10 @@ export const productValidation= [
   check('stock', 'Please include a the stock').not().isEmpty().isNumeric(),
   check('category', 'Category is required').not().isEmpty(),
   check('price','Price Must be a Number').not().isEmpty().isNumeric()
-];
+]
+
+export const cartValidation=[
+  check('product','product is required').not().isEmpty(),
+  check('user','user is required').not().isEmpty(),
+  check('quantity','quantity is required').not().isEmpty().isNumeric()
+]

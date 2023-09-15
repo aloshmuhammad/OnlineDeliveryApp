@@ -1,6 +1,9 @@
 import Driver from "../Schemas/truckDriverSchema.js"
 import Vendor from "../Schemas/VendorSchema.js";
 import bcrypt from 'bcrypt'
+import Cart from "../Schemas/CartSchema.js";
+import Products from "../Schemas/ProductSchema.js";
+import Order from "../Schemas/OrderSchema.js";
 const SignupQuery = async (data) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -83,4 +86,83 @@ const vendorSelect=async(id)=>{
    })
 }
 
-    export {SignupQuery,signInQuery,vendorList,vendorSelect}
+const cartAdd = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Check if the 'product' field is valid
+      const product = await Products.findById(data.product);
+
+      if (!product) {
+        return reject({
+          message: 'Product not found',
+        });
+      }
+
+      // Check if the 'user' field (Driver) is valid
+      const driver = await Driver.findById(data.user);
+
+      if (!driver) {
+        return reject({
+          message: 'Driver not found',
+        });
+      }
+
+      // Calculate the cartValue
+      data.cartValue = product.price * data.quantity;
+
+      // Create a new cart item
+      await Cart.create(data);
+
+      resolve({
+        message: 'Item Added To Cart',
+      });
+    } catch (error) {
+      console.error('Error in cartAdd:', error);
+      reject({
+        message: 'Error occurred during Add to Cart',
+      });
+    }
+  });
+};
+
+const getCart=async(userId)=>{
+  return new Promise(async(resolve,reject)=>{
+    try{
+     const cart=await Cart.find({user:userId}).populate('product')
+     if(cart){
+      resolve(cart)
+     }else{
+      reject({message:'Cart not Found'})
+     }
+    }catch(error){
+      throw new Error('Error occured during Add to Cart')
+    }
+  })
+}
+const orderAdd=async(vendorId,userId)=>{
+  return new Promise(async(resolve,reject)=>{
+    try{
+      const cart=await Cart.findOne({user:userId})
+      if(!cart){
+        reject({message:'Cart not Found'})
+      }
+      const orders={}
+      orders.product=cart.product
+      orders.TotalPrice=cart.cartValue
+      orders.user=cart.user,
+      orders.vendor=vendorId,
+      orders.quantity=cart.quantity
+    
+      const ord=await Order.create(orders)
+  
+      const orderlist=await Order.find({user:userId}).populate('product').populate('user').populate('vendor')
+      resolve(orderlist)
+      
+    
+    }catch(error){
+      throw new Error('Error occured during Order Products')
+    }
+  })
+}
+
+    export {SignupQuery,signInQuery,vendorList,vendorSelect,cartAdd,getCart,orderAdd}
